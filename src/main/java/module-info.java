@@ -5,7 +5,10 @@ module dev.hmap {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires org.apache.commons.net;
+    requires org.apache.commons.csv;
 
     opens dev.hmap to javafx.fxml;
+
     exports dev.hmap;
 }
