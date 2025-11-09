@@ -9,7 +9,7 @@ target/
 !**/src/test/**/target/
 
 # Maven Wrapper
-.mvn/wrapper/maven-wrapper.properties
+.mvn/*
 mvnw
 mvnw.cmd
 
