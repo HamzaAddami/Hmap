@@ -7,11 +7,11 @@ public class ThreadPoolManager {
     // Singleton
     private static ThreadPoolManager instance;
 
-    ExecutorService networkPool;
-    ExecutorService scanPool;
-    ExecutorService backgroundPool;
+    private final ExecutorService networkPool;
+    private final ExecutorService scanPool;
+    private final ExecutorService backgroundPool;
 
-    public final AtomicInteger activeTasks = new AtomicInteger(0);
+    private final AtomicInteger activeTasks = new AtomicInteger(0);
 
     private ThreadPoolManager(){
 
