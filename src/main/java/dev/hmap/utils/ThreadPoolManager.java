@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadPoolManager {
     // Singleton
-    public static ThreadPoolManager instance;
+    private static ThreadPoolManager instance;
 
     ExecutorService networkPool;
     ExecutorService scanPool;
