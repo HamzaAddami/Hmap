@@ -1,18 +1,15 @@
 package dev.hmap;
 
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
-import javafx.util.converter.LocalDateStringConverter;
-import org.apache.commons.net.SocketClient;
-
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.time.LocalDateTime;
-import java.util.Locale;
+import java.net.NetworkInterface;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class HmapMain  {
@@ -27,10 +24,48 @@ public class HmapMain  {
 //        stage.show();
 //    }
 
-    public static void main(String[] args)  throws IOException{
+    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
 
-        System.out.println(Application.getUserAgentStylesheet());
+        ThreadFactory threadFactory = new ThreadFactory() {
+            private final AtomicInteger index = new AtomicInteger(1);
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r, "ThreadFac" +  index.getAndIncrement());
+                thread.setDaemon(false);
+                return thread;
+            }
+        };
 
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                10,
+                10,
+                2000,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(),
+                threadFactory
+                );
+
+       Future<?> future = executor.submit(new Task());
+
+        future.get();
+        executor.shutdown();
+        System.out.println(Runtime.getRuntime().availableProcessors());
+
+        InetAddress ip = InetAddress.getLocalHost();
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(ip);
+
+        byte[] mac = networkInterface.getHardwareAddress();
+
+        System.out.println(mac);
+
+
+    }
+
+    public static class Task implements Runnable{
+        @Override
+        public void run(){
+            System.out.println(Thread.currentThread().getName());
+        }
     }
 
 

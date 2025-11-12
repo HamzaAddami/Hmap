@@ -129,6 +129,7 @@ public class TcpClientService extends SocketClient {
     }
 
     // Notification Setters
+
     public void setOnReceiveMessage(Consumer<Message> callback){
         this.onReceiveMessage = callback;
     }
