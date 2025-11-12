@@ -48,6 +48,8 @@ public class ThreadPoolManager {
         );
     }
 
+    // Methods
+
     public static synchronized ThreadPoolManager getThreadPoolManager(){
         if(threadPoolManager == null){
             threadPoolManager = new ThreadPoolManager();
@@ -131,6 +133,7 @@ public class ThreadPoolManager {
         );
     }
 
+    // Implementing NamedThreadFactory for creating named Threads
     private static class NamedThreadFactory implements ThreadFactory{
         private final String name;
         private final AtomicInteger counter = new AtomicInteger(1);
