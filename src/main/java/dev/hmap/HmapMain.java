@@ -58,6 +58,8 @@ public class HmapMain  {
 
         System.out.println(mac);
 
+        InetAddress ip = new InetAddress();
+
 
     }
 

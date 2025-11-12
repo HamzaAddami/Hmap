@@ -1,16 +1,18 @@
 package dev.hmap.services.sockettest;
 
 import dev.hmap.models.Message;
+import dev.hmap.utils.ThreadPoolManager;
 import org.apache.commons.net.SocketClient;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 public class TcpClientService extends SocketClient {
 
     private BufferedReader reader;
     private PrintWriter printer;
-    private Thread receiverTask;
+    private Future<?> receiverTask;
     private boolean connected = false;
 
     private Consumer<Message> onReceiveMessage;
@@ -33,8 +35,13 @@ public class TcpClientService extends SocketClient {
         connected = true;
         notifyStatusChanged("Connexion to " + host + ":" + port);
 
-        startReceiving();
+         receiverTask = ThreadPoolManager.getInstance().executeNetworkTasks(this::startReceiving);
 
+    }
+
+    @Override
+    public boolean isConnected(){
+        return connected && _socket_.isConnected() && !_socket_.isClosed();
     }
 
     @Override
@@ -47,8 +54,8 @@ public class TcpClientService extends SocketClient {
             if(printer != null){
                 printer.close();
             }
-            if(receiverTask != null && receiverTask.isAlive()){
-                receiverTask.interrupt();
+            if(receiverTask != null && receiverTask.isDone()){
+                receiverTask.cancel(true);
             }
 
             super.disconnect();
@@ -60,7 +67,6 @@ public class TcpClientService extends SocketClient {
     }
 
     public void startReceiving() {
-        receiverTask = new Thread(() -> {
             try{
                 String line;
                 while(connected && ( line = reader.readLine()) != null){
@@ -70,11 +76,8 @@ public class TcpClientService extends SocketClient {
 
             } catch (IOException e){
                 notifyError("Connexion lost :" + e.getMessage());
+                disconnect();
             }
-        }, "TCP-RECEIVER-THREAD");
-        receiverTask.setDaemon(true);
-        receiverTask.start();
-
     }
 
     public void sendMessage(Message message){
@@ -87,11 +90,6 @@ public class TcpClientService extends SocketClient {
         if(printer.checkError()){
             notifyError("Error sending the message");
         }
-    }
-
-    @Override
-    public boolean isConnected(){
-        return connected && _socket_.isConnected() && !_socket_.isClosed();
     }
 
     public String getLocalAdress() {
@@ -129,7 +127,6 @@ public class TcpClientService extends SocketClient {
     }
 
     // Notification Setters
-
     public void setOnReceiveMessage(Consumer<Message> callback){
         this.onReceiveMessage = callback;
     }
