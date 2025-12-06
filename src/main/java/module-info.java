@@ -11,4 +11,6 @@ module dev.hmap {
     opens dev.hmap to javafx.fxml;
 
     exports dev.hmap;
+    exports dev.hmap.controllers;
+    opens dev.hmap.controllers to javafx.fxml;
 }

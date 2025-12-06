@@ -60,7 +60,7 @@ public class Port {
 
     public String getDefaultServiceName() {
         return switch (portNumber){
-            case 20 -> "FTP-DATA";
+            case 20 -> "FTP_DATA";
             case 21 -> "FTP";
             case 22 -> "SSH";
             case 23 -> "TELNET";
@@ -75,8 +75,13 @@ public class Port {
             case 3389 -> "RDP";
             case 5432 -> "PostgreSQL";
             case 5900 -> "VNC";
-            case 8080 -> "HTTP-Proxy";
+            case 8080 -> "HTTP_PROXY";
             case 27017 -> "MongoDB";
+            case 135 -> "msrpc";
+            case 902 -> "iss-realsecure";
+            case 912 -> "apex-mesh";
+            case 139 -> "microsoft-ds";
+
             default -> "UNKNOWN";
         };
     }

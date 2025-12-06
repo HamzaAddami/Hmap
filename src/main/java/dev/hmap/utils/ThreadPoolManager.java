@@ -1,5 +1,7 @@
 package dev.hmap.utils;
 
+import dev.hmap.models.ScanResult;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -69,11 +71,11 @@ public class ThreadPoolManager {
         });
     }
 
-    public Future<?> executeScanTasks(Runnable task){
+    public <T> Future<T> executeScanTasks(Callable<T> task){
         return scanPool.submit(() -> {
             activeTasks.incrementAndGet();
             try{
-                task.run();
+                return task.call();
             }finally {
                 activeTasks.decrementAndGet();
             }

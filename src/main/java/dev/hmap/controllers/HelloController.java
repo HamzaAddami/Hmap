@@ -1,4 +1,4 @@
-package dev.hmap;
+package dev.hmap.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

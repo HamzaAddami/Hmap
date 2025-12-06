@@ -3,14 +3,14 @@ package dev.hmap.models;
 public class Service {
 
     private String serviceName;
-    private int port;
-    private String protocol;
+    private Port port;
+    private final String protocol;
     private String description;
     private boolean isVulnerable;
 
-    public Service(int port, String protocol){
+    public Service(Port port){
         this.port = port;
-        this.protocol = protocol;
+        this.protocol = port.getDefaultServiceName();
         this.isVulnerable = false;
     }
 
@@ -24,19 +24,15 @@ public class Service {
     }
 
     public int getPort() {
-        return port;
+        return port.getPortNumber();
     }
 
     public void setPort(int port) {
-        this.port = port;
+        this.port = new Port(port);
     }
 
     public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
+        return port.getProtocol().protocolName;
     }
 
     public String getDescription() {

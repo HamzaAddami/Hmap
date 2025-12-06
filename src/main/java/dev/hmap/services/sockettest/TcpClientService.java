@@ -35,7 +35,7 @@ public class TcpClientService extends SocketClient {
         connected = true;
         notifyStatusChanged("Connexion to " + host + ":" + port);
 
-         receiverTask = ThreadPoolManager.getInstance().executeNetworkTasks(this::startReceiving);
+        receiverTask = ThreadPoolManager.getInstance().executeNetworkTasks(this::startReceiving);
 
     }
 

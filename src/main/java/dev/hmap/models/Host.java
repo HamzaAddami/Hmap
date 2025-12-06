@@ -1,6 +1,7 @@
 package dev.hmap.models;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,17 +49,22 @@ public class Host {
 
     private String hostName;
     private InetAddress ipAddress;
+    private String ipString;
     private String macAddress;
     private OsFamily osFamily;
     private HostStatus status;
     private boolean isActive;
     private String description;
+    private long latency;
 
     private List<Port> openPorts;
     private List<Service> runningServices;
 
     private int openPortsCount;
     private int totalPortsScanned;
+
+    private boolean isReachableByPing;
+    private boolean isReachableByTCP;
 
     private LocalDateTime lastSeen;
     private LocalDateTime scanDate;
@@ -67,6 +73,7 @@ public class Host {
 
     public Host(InetAddress ipAddress) {
         this.ipAddress = ipAddress;
+        this.ipString = ipAddress.getHostAddress();
         this.status = HostStatus.UNKNOWN;
         this.isActive = false;
         this.osFamily = OsFamily.UNKNOWN;
@@ -76,6 +83,10 @@ public class Host {
     public Host(InetAddress ipAddress, String hostName){
         this(ipAddress);
         this.hostName = hostName;
+    }
+
+    public Host(String ipString) throws UnknownHostException {
+        this(InetAddress.getByName(ipString));
     }
 
     // Methods -----------------------------
@@ -144,7 +155,6 @@ public class Host {
         this.status = HostStatus.DOWN;
     }
 
-
     // Getters & Setters
 
 
@@ -162,6 +172,14 @@ public class Host {
 
     public void setIpAddress(InetAddress ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public String getIpString() {
+        return ipString;
+    }
+
+    public void setIpString(String ipString) {
+        this.ipString = ipString;
     }
 
     public String getMacAddress() {
@@ -202,6 +220,14 @@ public class Host {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getLatency() {
+        return latency;
+    }
+
+    public void setLatency(long latency) {
+        this.latency = latency;
     }
 
     public List<Port> getOpenPorts() {
@@ -252,28 +278,46 @@ public class Host {
         this.scanDate = scanDate;
     }
 
+    public boolean isReachableByPing() {
+        return isReachableByPing;
+    }
+
+    public void setReachableByPing(boolean reachableByPing) {
+        isReachableByPing = reachableByPing;
+    }
+
+    public boolean isReachableByTCP() {
+        return isReachableByTCP;
+    }
+
+    public void setReachableByTCP(boolean reachableByTCP) {
+        isReachableByTCP = reachableByTCP;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Host host = (Host) o;
-        return isActive == host.isActive && openPortsCount == host.openPortsCount && totalPortsScanned == host.totalPortsScanned && Objects.equals(hostName, host.hostName) && Objects.equals(ipAddress, host.ipAddress) && Objects.equals(macAddress, host.macAddress) && osFamily == host.osFamily && status == host.status && Objects.equals(description, host.description) && Objects.equals(openPorts, host.openPorts) && Objects.equals(runningServices, host.runningServices) && Objects.equals(lastSeen, host.lastSeen) && Objects.equals(scanDate, host.scanDate);
+        return isActive == host.isActive && latency == host.latency && openPortsCount == host.openPortsCount && totalPortsScanned == host.totalPortsScanned && Objects.equals(hostName, host.hostName) && Objects.equals(ipAddress, host.ipAddress) && Objects.equals(ipString, host.ipString) && Objects.equals(macAddress, host.macAddress) && osFamily == host.osFamily && status == host.status && Objects.equals(description, host.description) && Objects.equals(openPorts, host.openPorts) && Objects.equals(runningServices, host.runningServices) && Objects.equals(lastSeen, host.lastSeen) && Objects.equals(scanDate, host.scanDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hostName, ipAddress, macAddress, osFamily, status, isActive, description, openPorts, runningServices, openPortsCount, totalPortsScanned, lastSeen, scanDate);
+        return Objects.hash(hostName, ipAddress, ipString, macAddress, osFamily, status, isActive, description, latency, openPorts, runningServices, openPortsCount, totalPortsScanned, lastSeen, scanDate);
     }
 
     @Override
     public String toString() {
         return "Host{" +
                 "hostName='" + hostName + '\'' +
-                ", ipAddress=" + ipAddress +
+                ", ipAddress=" + ipAddress.getHostAddress() +
+                ", ipString='" + ipString + '\'' +
                 ", macAddress='" + macAddress + '\'' +
                 ", osFamily=" + osFamily +
                 ", status=" + status +
                 ", isActive=" + isActive +
                 ", description='" + description + '\'' +
+                ", latency=" + latency +
                 ", openPorts=" + openPorts +
                 ", runningServices=" + runningServices +
                 ", openPortsCount=" + openPortsCount +
