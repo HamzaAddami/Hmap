@@ -1,6 +1,6 @@
 package dev.hmap.utils;
 
-import dev.hmap.models.Message;
+import dev.hmap.model.Message;
 
 import java.util.function.Consumer;
 

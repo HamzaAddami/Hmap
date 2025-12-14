@@ -1,6 +1,7 @@
-package dev.hmap.services.scanner;
+package dev.hmap.service.scanner;
 
-import dev.hmap.models.Host;
+import dev.hmap.enums.OsFamily;
+import dev.hmap.model.Host;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -41,7 +42,7 @@ public class HostDiscoveryService implements IHostDiscovery{
     }
 
     @Override
-    public Host.OsFamily detectOs(InetAddress address) {
+    public OsFamily detectOs(InetAddress address) {
         return null;
     }
 

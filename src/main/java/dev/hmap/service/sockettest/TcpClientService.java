@@ -1,7 +1,8 @@
-package dev.hmap.services.sockettest;
+package dev.hmap.service.sockettest;
 
-import dev.hmap.models.Message;
-import dev.hmap.utils.ThreadPoolManager;
+import dev.hmap.enums.MessageType;
+import dev.hmap.model.Message;
+import dev.hmap.config.ThreadPoolManager;
 import org.apache.commons.net.SocketClient;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -70,7 +71,7 @@ public class TcpClientService extends SocketClient {
             try{
                 String line;
                 while(connected && ( line = reader.readLine()) != null){
-                    Message message = new Message(line, Message.Type.RECEIVED);
+                    Message message = new Message(line, MessageType.RECEIVED);
                     notifyMessageReceived(message);
                 }
 

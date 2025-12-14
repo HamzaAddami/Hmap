@@ -1,9 +1,9 @@
-package dev.hmap.models;
+package dev.hmap.model;
 
 public class Service {
 
     private String serviceName;
-    private Port port;
+    private final Port port;
     private final String protocol;
     private String description;
     private boolean isVulnerable;
@@ -27,12 +27,8 @@ public class Service {
         return port.getPortNumber();
     }
 
-    public void setPort(int port) {
-        this.port = new Port(port);
-    }
-
     public String getProtocol() {
-        return port.getProtocol().protocolName;
+        return port.getProtocol().getProtocolName();
     }
 
     public String getDescription() {

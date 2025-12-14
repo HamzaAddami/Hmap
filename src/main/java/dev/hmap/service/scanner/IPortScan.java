@@ -1,7 +1,7 @@
-package dev.hmap.services.scanner;
+package dev.hmap.service.scanner;
 
-import dev.hmap.models.Host;
-import dev.hmap.models.ScanResult;
+import dev.hmap.model.Host;
+import dev.hmap.model.ScanResult;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

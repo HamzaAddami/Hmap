@@ -1,6 +1,7 @@
-package dev.hmap.services.scanner;
+package dev.hmap.service.scanner;
 
-import dev.hmap.models.Host;
+import dev.hmap.enums.OsFamily;
+import dev.hmap.model.Host;
 import java.net.InetAddress;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface IHostDiscovery {
     Host discoverHost(InetAddress address, int timeout);
     List<Host> scanNetwork(int cidr, int timeout);
     List<Host> scanNetwork(InetAddress gateway,String subnetMask, int timeout);
-    Host.OsFamily detectOs(InetAddress address);
+    OsFamily detectOs(InetAddress address);
     Host fullDiscovery(InetAddress address, int timeout);
 
 }

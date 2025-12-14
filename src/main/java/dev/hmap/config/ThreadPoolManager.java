@@ -1,6 +1,4 @@
-package dev.hmap.utils;
-
-import dev.hmap.models.ScanResult;
+package dev.hmap.config;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;

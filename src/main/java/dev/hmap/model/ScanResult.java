@@ -1,12 +1,8 @@
-package dev.hmap.models;
+package dev.hmap.model;
 
-import java.net.InetAddress;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import dev.hmap.enums.PortState;
 
 public class ScanResult {
 
@@ -35,16 +31,16 @@ public class ScanResult {
 
     public double getPortsPerSeconds(){
         double duration = getDurationInSeconds();
-        return duration > 0 ? totalPorts / duration : 0;
+        return duration > 0 ? scannedPorts.size() / duration : 0;
     }
 
-    public void addScannedPort(Port port){
+    public synchronized void addScannedPort(Port port){
         this.scannedPorts.add(port);
     }
 
     public List<Port> getOpenPorts(){
         return scannedPorts.stream()
-                .filter(p -> p.getState().equals(Port.PortState.OPEN))
+                .filter(p -> p.getState().equals(PortState.OPEN))
                 .toList();
     }
     public String getSummary(){
@@ -72,7 +68,7 @@ public class ScanResult {
                 String portDetails = String.format(
                         "%-8d %-12s %-18s ",
                         p.getPortNumber(),
-                        p.getState().portStatusName,
+                        p.getState().getPortStatusName(),
                         p.getDefaultServiceName()
                 );
                 summary.append(portDetails).append("\n");

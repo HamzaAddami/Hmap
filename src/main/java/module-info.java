@@ -8,9 +8,12 @@ module dev.hmap {
     requires org.apache.commons.net;
     requires org.apache.commons.csv;
 
+    requires com.zaxxer.hikari;
+    requires java.sql;
+
     opens dev.hmap to javafx.fxml;
 
     exports dev.hmap;
-    exports dev.hmap.controllers;
-    opens dev.hmap.controllers to javafx.fxml;
+    exports dev.hmap.controller;
+    opens dev.hmap.controller to javafx.fxml;
 }

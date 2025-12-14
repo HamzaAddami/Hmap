@@ -1,4 +1,7 @@
-package dev.hmap.models;
+package dev.hmap.model;
+
+import dev.hmap.enums.HostStatus;
+import dev.hmap.enums.OsFamily;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -9,41 +12,6 @@ import java.util.Objects;
 
 public class Host {
 
-    public enum HostStatus {
-        UNKNOWN("UNKNOWN"),
-        UP("UP"),
-        DOWN("DOWN"),
-        SCANNING("Scanning");
-
-        final String statusName;
-
-        HostStatus(String statusName ){
-            this.statusName = statusName;
-        }
-
-        public String getStatusName(){
-            return statusName;
-        }
-    }
-
-    public enum OsFamily {
-        UNKNOWN("UNKNOWN"),
-        WINDOWS("WINDOWS"),
-        MACOS("MACOS"),
-        LINUX("LINUX"),
-        ANDROID("ANDROID"),
-        IOS("IOS");
-
-        final String osFamilyName;
-
-        OsFamily(String osFamilyName) {
-            this.osFamilyName = osFamilyName;
-        }
-
-        public String getOsFamilyName() {
-            return osFamilyName;
-        }
-    }
 
     // Attributes --------------------------
 

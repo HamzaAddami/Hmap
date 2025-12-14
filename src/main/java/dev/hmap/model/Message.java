@@ -1,22 +1,16 @@
-package dev.hmap.models;
+package dev.hmap.model;
 
 import java.time.LocalDateTime;
+import dev.hmap.enums.MessageType;
 
 public class Message {
 
 
-    public enum Type {
-        SENT,
-        RECEIVED,
-        INFO,
-        ERROR
-    }
-
     private String content;
     private LocalDateTime timeStamp;
-    private Type type;
+    private MessageType type;
 
-    public Message(String content, Type type){
+    public Message(String content, MessageType type){
         this.content = content;
         this.type = type;
         this.timeStamp = LocalDateTime.now();
@@ -38,11 +32,11 @@ public class Message {
         this.timeStamp = timeStamp;
     }
 
-    public Type getType() {
+    public MessageType getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(MessageType type) {
         this.type = type;
     }
 

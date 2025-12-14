@@ -1,8 +1,7 @@
 package dev.hmap.utils;
 
-import dev.hmap.models.Message;
+import dev.hmap.model.Message;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 import java.util.function.Consumer;
 

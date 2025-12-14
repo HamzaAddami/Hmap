@@ -1,12 +1,11 @@
-package dev.hmap.services.scanner;
+package dev.hmap.service.scanner;
 
-import dev.hmap.models.Host;
-import dev.hmap.models.Port;
-import dev.hmap.models.ScanResult;
-import dev.hmap.services.task.PortScanTask;
-import dev.hmap.utils.ThreadPoolManager;
-import org.apache.commons.net.telnet.TelnetClient;
-import java.io.IOException;
+import dev.hmap.model.Host;
+import dev.hmap.model.Port;
+import dev.hmap.model.ScanResult;
+import dev.hmap.service.task.PortScanTask;
+import dev.hmap.config.ThreadPoolManager;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -18,28 +17,37 @@ import java.util.function.Consumer;
 
 public class PortScanService {
 
-    public static final List<Integer> COMMON_PORTS = List.of
-            (20, 21, 22, 23, 25, 53, 67, 68, 69,
-                    80, 110, 123, 135, 137, 138, 139,
-                    143, 161, 389, 443, 445, 500, 512,
-                    514, 515, 520, 587, 631, 636, 873,
-                    902, 903, 993, 995);
+    public static final List<Integer> COMMONS_UDP_PORTS = List.of
+            (
+            53, 67, 68, 69, 123, 137, 138, 139,161,
+                    162, 445, 500, 514, 520, 1194, 1900, 3478,
+                    4500, 5353, 5060, 6881, 10000, 17185, 27015,
+                    3702, 4500, 5353
+            );
 
-    private static final int[] WELL_KNOWN_PORTS = generateRangePorts(1, 1024);
+    public static final List<Integer> COMMON_PORTS = List.of
+            (20, 21, 22, 23, 25, 80, 110,
+                    111, 123, 135, 137, 138, 139, 143,
+                    161, 389, 443, 445, 500, 512, 514,
+                    515, 520, 587, 631, 636, 873, 902,
+                    903, 993, 995, 1900, 5357, 8081, 49152,
+                    62078, 65001, 3000, 3306
+            );
+
+    public static final List<Integer> WELL_KNOWN_PORTS = generateRangePorts(1, 100);
     private static final int SCAN_TIMEOUT_MS = 2000;
 
 
 
-    private static int[] generateRangePorts(int start, int end){
-        int[] result = new int[end - start + 1];
-        int len = result.length;
-        for (int i=0; i<len; i++){
-            result[i] = start + 1;
+    private static List<Integer> generateRangePorts(int start, int end){
+        List<Integer> result = new ArrayList<>();
+        for (int i=start; i<end; i++){
+            result.add(i);
             start++;
         }
         return result;
     }
-    private byte[] dataPayload;
+//    private byte[] dataPayload;
 
     private final ThreadPoolManager threadPoolManager;
 
@@ -57,37 +65,14 @@ public class PortScanService {
         return InetAddress.getByName(host);
     }
 
-    public boolean isOpenPort(InetAddress address, int port) {
-
-        TelnetClient telnetClient = new TelnetClient();
-        telnetClient.setDefaultTimeout(SCAN_TIMEOUT_MS);
-        try{
-            telnetClient.connect(address, port);
-            telnetClient.disconnect();
-            return true;
-        }catch (IOException e){
-            return false;
-        }
-    }
-
-    public ScanResult scan(InetAddress address, int port){
-
-
-        return null;
-    }
-
-
     public Future<ScanResult> scanAsync(Host host, List<Integer> ports, PortScanTask.ScanType scanType) {
         Callable<ScanResult> overallScan = () -> {
             ScanResult scanResult = new ScanResult(host);
-            scanResult.setTotalPorts(ports.size());
             List<Future<Port>> portFutures = new ArrayList<>();
 
             for(int portNumber: ports){
                 Port port = new Port(portNumber);
-                scanResult.addScannedPort(port);
                 PortScanTask scanTask = new PortScanTask(host, port, scanType);
-
                 Future<Port> future = threadPoolManager.executeScanTasks(scanTask);
                 portFutures.add(future);
             }

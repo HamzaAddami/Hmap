@@ -1,39 +1,11 @@
-package dev.hmap.models;
+package dev.hmap.model;
 
 import java.util.Objects;
+import dev.hmap.enums.PortState;
+import dev.hmap.enums.Protocol;
 
 public class Port {
 
-    public enum PortState{
-        OPEN("OPEN"),
-        CLOSED("CLOSED"),
-        UNKNOWN("UNKNOWN");
-
-        final String portStatusName;
-
-        PortState(String portStatusName){
-            this.portStatusName = portStatusName;
-        }
-
-        public String getPortStatusName() {
-            return portStatusName;
-        }
-    }
-
-    public enum Protocol{
-        TCP("TCP"),
-        UDP("UDP");
-
-        final String protocolName;
-
-        Protocol(String protocolName){
-            this.protocolName = protocolName;
-        }
-
-        public String getProtocolName() {
-            return protocolName;
-        }
-    }
 
     private int portNumber;
     private Protocol protocol;
@@ -81,7 +53,6 @@ public class Port {
             case 902 -> "iss-realsecure";
             case 912 -> "apex-mesh";
             case 139 -> "microsoft-ds";
-
             default -> "UNKNOWN";
         };
     }
