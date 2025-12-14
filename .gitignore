@@ -34,5 +34,5 @@ mvnw.cmd
 .idea/libraries/
 
 # prop
-!**/main/resources/application.properties
+**/main/resources/application.properties
 
