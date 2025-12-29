@@ -5,7 +5,7 @@ import dev.hmap.model.Host;
 
 import java.util.List;
 
-public class HostDAOImp implements HostDAO<Host> {
+public class HostDAOImp implements HostDAO<Host, Integer> {
 
     @Override
     public Host save(Host host) {
@@ -18,7 +18,7 @@ public class HostDAOImp implements HostDAO<Host> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Integer id) {
 
     }
 }

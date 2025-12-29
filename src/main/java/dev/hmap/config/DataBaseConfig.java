@@ -1,39 +1,28 @@
 package dev.hmap.config;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
+
+
 
 public class DataBaseConfig {
 
-    private static final String PROPERTIES_FILE = "application.properties";
-    private static Properties properties;
+    private static final Properties properties = new Properties();
 
-    static{
-        properties = new Properties();
-        try (InputStream input = DataBaseConfig.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE)){
-
-            if(input == null){
-                throw new RuntimeException(PROPERTIES_FILE + "NOT FOUND");
-            }
-
-            properties.load(input);
-
-        }catch (IOException e){
-            throw new RuntimeException("ERROR LOADING DATABASE CONFIGURATION" + e);
+    static {
+        try (FileInputStream fis = new FileInputStream("config.properties")) {
+            properties.load(fis);
+        } catch (IOException e) {
         }
     }
 
-    public static String getUrl() {
-        return properties.getProperty("db.url");
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
     }
 
-    public static String getUsername() {
-        return properties.getProperty("db.username");
-    }
-
-    public static String getPassword() {
-        return properties.getProperty("db.password");
+    public static int getIntProperty(String key) {
+        return Integer.parseInt(properties.getProperty(key));
     }
 
 }

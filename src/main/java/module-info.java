@@ -8,12 +8,20 @@ module dev.hmap {
     requires org.apache.commons.net;
     requires org.apache.commons.csv;
 
-    requires com.zaxxer.hikari;
+    // requires com.zaxxer.hikari;
+    requires static lombok;
+
+    requires org.pcap4j.core;
     requires java.sql;
+    requires org.hibernate.orm.core;
+
+    requires jakarta.persistence;
 
     opens dev.hmap to javafx.fxml;
 
     exports dev.hmap;
     exports dev.hmap.controller;
     opens dev.hmap.controller to javafx.fxml;
+    opens dev.hmap.model to org.hibernate.orm.core;
+
 }

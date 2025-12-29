@@ -1,9 +1,9 @@
 package dev.hmap.dao.base;
 
+import dev.hmap.model.ScanResult;
+
 import java.util.List;
 
-public interface ScanResultDAO<T> {
-    T save(T t);
-    List<T> findAll();
-    void delete(long id);
+public interface ScanResultDAO<ScanResult, Integer> extends BaseDAO<ScanResult, Integer> {
+
 }

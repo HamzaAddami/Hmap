@@ -1,19 +1,17 @@
-package dev.hmap.service.scanner;
+package dev.hmap.service.scanner.base;
 
 import dev.hmap.model.Host;
 import dev.hmap.model.ScanResult;
+import dev.hmap.enums.ScanType;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.concurrent.Future;
 
 public interface IPortScan {
-
     InetAddress resolveHost(String host) throws UnknownHostException;
-    boolean isOpenPort(Host host, int port);
-    ScanResult scan(Host host, int port);
-    Future<ScanResult> scanAsync(Host host, int port);
-
+    Future<ScanResult> scanAsync(Host host, List<Integer> ports, ScanType scanType);
     void shutdown();
 
 }

@@ -5,7 +5,7 @@ import dev.hmap.model.ScanResult;
 
 import java.util.List;
 
-public class ScanResultDAOImp implements ScanResultDAO<ScanResult> {
+public class ScanResultDAOImp implements ScanResultDAO<ScanResult, Integer> {
 
     @Override
     public ScanResult save(ScanResult scanResult) {
@@ -18,7 +18,6 @@ public class ScanResultDAOImp implements ScanResultDAO<ScanResult> {
     }
 
     @Override
-    public void delete(long id) {
-
+    public void delete(Integer id) {
     }
 }

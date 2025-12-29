@@ -3,50 +3,74 @@ package dev.hmap.model;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import dev.hmap.enums.PortState;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
+@Table(name = "scan_results")
+@NoArgsConstructor
+@Getter
+@Setter
 public class ScanResult {
 
-    private final Host host;
-    private final List<Port> scannedPorts;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "host_id")
+    private Host host;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "scan_result_ports",
+            joinColumns = @JoinColumn(name = "scan_result_id"),
+            inverseJoinColumns = @JoinColumn(name = "port_id")
+    )
+    private List<Port> scannedPorts;
+
     private int totalPorts;
     private long startTime;
     private long endTime;
     private boolean completed;
 
-    public ScanResult(Host host){
+    public ScanResult(Host host) {
         this.host = host;
         this.scannedPorts = new CopyOnWriteArrayList<>();
         this.startTime = System.currentTimeMillis();
         this.completed = false;
     }
 
-    public void finalizeScan(){
+    public void finalizeScan() {
         this.endTime = System.currentTimeMillis();
         this.completed = true;
     }
 
-    public double getDurationInSeconds(){
+    public double getDurationInSeconds() {
         return (endTime - startTime) / 1000.0;
     }
 
-    public double getPortsPerSeconds(){
+    public double getPortsPerSeconds() {
         double duration = getDurationInSeconds();
         return duration > 0 ? scannedPorts.size() / duration : 0;
     }
 
-    public synchronized void addScannedPort(Port port){
+    public synchronized void addScannedPort(Port port) {
         this.scannedPorts.add(port);
     }
 
-    public List<Port> getOpenPorts(){
+    public List<Port> getOpenPorts() {
         return scannedPorts.stream()
                 .filter(p -> p.getState().equals(PortState.OPEN))
                 .toList();
     }
-    public String getSummary(){
+
+    public String getSummary() {
 //        List<Port> openPorts = getOpenPorts();
-            int openPortsCount = host.getOpenPortsCount();
-            int portsCount = scannedPorts.size();
+        int openPortsCount = host.getOpenPortsCount();
+        int portsCount = scannedPorts.size();
         StringBuilder summary = new StringBuilder();
         summary.append("--- Scan Report ---\n");
         summary.append(String.format("Target Host: %s\n", host.getIpAddress().getHostAddress()));
@@ -58,7 +82,7 @@ public class ScanResult {
         summary.append(String.format("Status: %s\n", completed ? "COMPLETED" : "IN PROGRESS"));
         summary.append("-------------------\n\n");
 
-        if(openPortsCount > 0){
+        if (openPortsCount > 0) {
             summary.append("OPEN PORT DETAILS:\n");
 
             summary.append(String.format("%-8s %-12s %-18s \n", "PORT", "STATUS", "SERVICE"));
@@ -77,41 +101,5 @@ public class ScanResult {
             summary.append("No open ports found on target host.\n");
         }
         return summary.toString();
-    }
-
-    public Host getHost() {
-        return host;
-    }
-
-    public int getTotalPorts() {
-        return totalPorts;
-    }
-
-    public void setTotalPorts(int totalPorts) {
-        this.totalPorts = totalPorts;
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(long startTime){
-        this.startTime = startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 }

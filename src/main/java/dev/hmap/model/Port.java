@@ -3,13 +3,35 @@ package dev.hmap.model;
 import java.util.Objects;
 import dev.hmap.enums.PortState;
 import dev.hmap.enums.Protocol;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Entity
+@Table(name = "ports")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter @Setter
 public class Port {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private int portNumber;
+
+    @Enumerated(EnumType.STRING)
     private Protocol protocol;
+
+    @Enumerated(EnumType.STRING)
     private PortState state;
+
+    @ManyToOne
+    @JoinColumn(name = "host_id")
+    private Host host;
 
     // Constructors -------------------
 
@@ -70,51 +92,4 @@ public class Port {
         };
     }
 
-
-    // Getters & Setters
-
-    public PortState getState() {
-        return state;
-    }
-
-    public void setState(PortState state) {
-        this.state = state;
-    }
-
-    public Protocol getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(Protocol protocol) {
-        this.protocol = protocol;
-    }
-
-    public int getPortNumber() {
-        return portNumber;
-    }
-
-    public void setPortNumber(int portNumber) {
-        this.portNumber = portNumber;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Port port = (Port) o;
-        return portNumber == port.portNumber && protocol == port.protocol && state == port.state;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(portNumber, protocol, state);
-    }
-
-    @Override
-    public String toString() {
-        return "Port{" +
-                "portNumber=" + portNumber +
-                ", protocol=" + protocol +
-                ", state=" + state +
-                '}';
-    }
 }

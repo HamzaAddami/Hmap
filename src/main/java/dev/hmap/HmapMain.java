@@ -1,14 +1,24 @@
 package dev.hmap;
 
+import dev.hmap.config.DataBaseConfig;
+import dev.hmap.config.ScanRepository;
+import dev.hmap.enums.ScanType;
 import dev.hmap.model.Host;
 import dev.hmap.model.ScanResult;
 import dev.hmap.service.scanner.PortScanService;
 import dev.hmap.service.task.PortScanTask;
 import dev.hmap.config.ThreadPoolManager;
+import dev.hmap.utils.PortGeneator;
+import jakarta.persistence.EntityManager;
+import org.pcap4j.core.*;
+import org.pcap4j.packet.Packet;
+import org.pcap4j.util.LinkLayerAddress;
+import org.pcap4j.util.NifSelector;
 
 import java.io.IOException;
 import java.net.*;
 
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -25,53 +35,59 @@ public class HmapMain {
 //
 //    }
 
-    public static void main(String[] args) throws UnknownHostException, InterruptedException, IOException {
+    public static void main(String[] args) throws UnknownHostException, InterruptedException, IOException, PcapNativeException {
 //         launch(args);
 
 
+        Host host = new Host("192.168.1.55");
 
-        long d1 = System.currentTimeMillis();
-        String ip = InetAddress.getLocalHost().getHostName();
-        Host host = new Host("192.168.0.133");
 
-        ThreadPoolManager threadPoolManager = ThreadPoolManager.getInstance();
+        // ThreadPoolManager threadPoolManager = ThreadPoolManager.getInstance();
+
+
+
 
         PortScanService portScanService = new PortScanService();
 
-        Future<ScanResult>  result = portScanService.scanAsync(
-                host, PortScanService.WELL_KNOWN_PORTS, PortScanTask.ScanType.UDP
-        );
 
-        try {
+        Future<ScanResult>  result = portScanService.scanAsync(
+                host, PortGeneator.COMMON_PORTS, ScanType.TCP_CONNECT
+        );
+        // System.out.println(threadPoolManager.getSummary());
+
+        try{
             ScanResult finalResult = result.get();
             System.out.println(finalResult.getSummary());
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
 
+
     }
 
-
-    public static class Task implements Runnable{
-        @Override
-        public void run(){
-            System.out.println(Thread.currentThread().getName());
+    public static String getMacAddress(NetworkInterface netInterface) throws SocketException{
+        byte[] mac = netInterface.getHardwareAddress();
+        if(mac == null) return "UNKNOWN";
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < mac.length; i++){
+            sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
         }
+
+        return sb.toString();
+
     }
 
-    public static boolean isOpen(String ip, int port, int timeout){
-        try{
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(ip, port), timeout);
-            socket.close();
-            return true;
-
-        }catch (Exception e){
-            return false;
+    public static PcapNetworkInterface getActiveInterface() throws PcapNativeException {
+        List<PcapNetworkInterface> allIfs = Pcaps.findAllDevs();
+        for (PcapNetworkInterface nif : allIfs) {
+            if (!nif.isLoopBack() && nif.isUp() && !nif.getAddresses().isEmpty()) {
+                boolean hasIpv4 = nif.getAddresses().stream()
+                        .anyMatch(addr -> addr.getAddress() instanceof Inet4Address);
+                if (hasIpv4) return nif;
+            }
         }
+        throw new RuntimeException("Aucune interface réseau active détectée.");
     }
-
-
 
 }
 
