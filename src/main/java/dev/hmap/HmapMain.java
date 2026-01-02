@@ -1,19 +1,11 @@
 package dev.hmap;
 
-import dev.hmap.config.DataBaseConfig;
-import dev.hmap.config.ScanRepository;
 import dev.hmap.enums.ScanType;
 import dev.hmap.model.Host;
 import dev.hmap.model.ScanResult;
-import dev.hmap.service.scanner.PortScanService;
-import dev.hmap.service.task.PortScanTask;
-import dev.hmap.config.ThreadPoolManager;
+import dev.hmap.service.scanner.impl.PortScanService;
 import dev.hmap.utils.PortGeneator;
-import jakarta.persistence.EntityManager;
 import org.pcap4j.core.*;
-import org.pcap4j.packet.Packet;
-import org.pcap4j.util.LinkLayerAddress;
-import org.pcap4j.util.NifSelector;
 
 import java.io.IOException;
 import java.net.*;

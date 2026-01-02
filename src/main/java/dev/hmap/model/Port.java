@@ -24,12 +24,12 @@ public class Port {
     private int portNumber;
 
     @Enumerated(EnumType.STRING)
-    private Protocol protocol;
+    private Protocol protocol = Protocol.TCP;
 
     @Enumerated(EnumType.STRING)
-    private PortState state;
+    private PortState state = PortState.UNKNOWN;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "host_id")
     private Host host;
 
@@ -42,7 +42,6 @@ public class Port {
     public Port(int portNumber, Protocol protocol){
         this.portNumber = portNumber;
         this.protocol = protocol;
-        this.state = PortState.UNKNOWN;
     }
 
     public Port(int portNumber, boolean isOpen){

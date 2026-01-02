@@ -1,5 +1,8 @@
 package dev.hmap.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import dev.hmap.enums.PortState;
@@ -19,37 +22,34 @@ public class ScanResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "host_id")
     private Host host;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "scan_result_ports",
-            joinColumns = @JoinColumn(name = "scan_result_id"),
-            inverseJoinColumns = @JoinColumn(name = "port_id")
-    )
-    private List<Port> scannedPorts;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "scan_result_id")
+    private List<Port> scannedPorts = new ArrayList<>();
 
     private int totalPorts;
-    private long startTime;
-    private long endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private boolean completed;
 
     public ScanResult(Host host) {
         this.host = host;
         this.scannedPorts = new CopyOnWriteArrayList<>();
-        this.startTime = System.currentTimeMillis();
+        this.startTime = LocalDateTime.now();
         this.completed = false;
     }
 
     public void finalizeScan() {
-        this.endTime = System.currentTimeMillis();
+        this.endTime = LocalDateTime.now();
         this.completed = true;
     }
 
-    public double getDurationInSeconds() {
-        return (endTime - startTime) / 1000.0;
+    @Transient
+    public long getDurationInSeconds() {
+        return Duration.between(startTime, endTime).getSeconds();
     }
 
     public double getPortsPerSeconds() {

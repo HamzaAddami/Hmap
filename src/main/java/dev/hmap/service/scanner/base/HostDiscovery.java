@@ -5,7 +5,7 @@ import dev.hmap.model.Host;
 import java.net.InetAddress;
 import java.util.List;
 
-public interface IHostDiscovery {
+public interface HostDiscovery {
 
     boolean isReachable(InetAddress address, int timeout);
     boolean isReachableByTCP(InetAddress address, int timeout);
