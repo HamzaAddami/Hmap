@@ -21,10 +21,6 @@ public class PortScanService implements IPortScan {
 
     private final ThreadPoolManager threadPoolManager;
 
-//    private Consumer<String> onSuccess;
-//    private Consumer<String> onErrors;
-//    private Future<?> portScanner;
-
     public PortScanService(){
         this.threadPoolManager = ThreadPoolManager.getInstance();
     };
