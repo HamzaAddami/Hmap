@@ -4,6 +4,7 @@ import dev.hmap.model.ScanResult;
 
 import java.util.List;
 
-public interface ScanResultDAO<ScanResult, Integer> extends BaseDAO<ScanResult, Integer> {
+public interface ScanResultDAO extends BaseDAO<ScanResult, Long> {
 
+    List<ScanResult> findLastScansByHost(Long hostId, int limit);
 }

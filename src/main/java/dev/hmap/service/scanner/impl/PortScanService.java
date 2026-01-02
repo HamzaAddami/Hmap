@@ -1,10 +1,10 @@
-package dev.hmap.service.scanner;
+package dev.hmap.service.scanner.impl;
 
 import dev.hmap.enums.ScanType;
 import dev.hmap.model.Host;
 import dev.hmap.model.Port;
 import dev.hmap.model.ScanResult;
-import dev.hmap.service.scanner.base.IPortScan;
+import dev.hmap.service.scanner.base.PortScan;
 import dev.hmap.service.task.PortScanTask;
 import dev.hmap.config.ThreadPoolManager;
 
@@ -15,9 +15,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.function.Consumer;
 
-public class PortScanService implements IPortScan {
+public class PortScanService implements PortScan {
 
     private final ThreadPoolManager threadPoolManager;
 

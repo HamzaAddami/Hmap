@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.logging.Logger;
 
 
 @Entity
@@ -22,6 +22,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Host {
 
     @Id
@@ -29,7 +30,10 @@ public class Host {
     private Long id;
 
     private String hostName;
+
+    @Transient
     private InetAddress ipAddress;
+
     private String ipString;
     private String macAddress;
 
@@ -38,7 +42,6 @@ public class Host {
 
     @Enumerated(EnumType.STRING)
     private HostStatus status;
-    private boolean isActive;
     private String description;
     private long latency;
 
@@ -58,7 +61,6 @@ public class Host {
         this.ipAddress = ipAddress;
         this.ipString = ipAddress.getHostAddress();
         this.status = HostStatus.UNKNOWN;
-        this.isActive = false;
         this.osFamily = OsFamily.UNKNOWN;
         this.openPorts = new ArrayList<>();
     }
@@ -72,49 +74,20 @@ public class Host {
         this(InetAddress.getByName(ipString));
     }
 
-
-
-
-    // Methods -----------------------------
-
-    // Ports method
-
     public void addPort(Port port){
          if(port != null && !openPorts.contains(port)){
              openPorts.add(port);
-             openPortsCount++;
+             port.setHost(this);
          }
     }
 
-    public void addPorts(List<Port> ports){
-        if(ports != null){
-            openPorts.addAll(ports);
+    @PostLoad
+    private void initInetAddress(){
+        try{
+            this.ipAddress = InetAddress.getByName(ipString);
+        }catch (UnknownHostException e){
+            System.err.println(e.getMessage());
         }
-    }
-
-    public boolean hasOpenPorts() {
-        return openPorts.isEmpty();
-    }
-
-    public Port getPort(int portNumber){
-        for(Port port: openPorts){
-            if(port.getPortNumber() == portNumber){
-                return port;
-            }
-        }
-        return null;
-    }
-
-    // Control methods
-
-    public void setActive(){
-        this.isActive = true;
-        this.status = HostStatus.UP;
-    }
-
-    public void setInactive(){
-        this.isActive = false;
-        this.status = HostStatus.DOWN;
     }
 
 

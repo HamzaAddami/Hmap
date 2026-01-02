@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Future;
 
-public interface IPortScan {
+public interface PortScan {
     InetAddress resolveHost(String host) throws UnknownHostException;
     Future<ScanResult> scanAsync(Host host, List<Integer> ports, ScanType scanType);
     void shutdown();
