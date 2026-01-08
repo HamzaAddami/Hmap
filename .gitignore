@@ -36,3 +36,5 @@ mvnw.cmd
 # prop
 **/main/resources/application.properties
 
+config.properties
+
