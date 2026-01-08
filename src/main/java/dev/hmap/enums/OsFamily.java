@@ -6,7 +6,8 @@ public enum OsFamily {
     MACOS("MACOS"),
     LINUX("LINUX"),
     ANDROID("ANDROID"),
-    IOS("IOS");
+    IOS("IOS"),
+    NETWORK_DEVICE("NETWORK_DEVICE");
 
     final String osFamilyName;
 

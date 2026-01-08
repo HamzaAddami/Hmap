@@ -6,37 +6,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkUtils {
-
-    private List<InetAddress> getAddressesFromCidr(String cidr) throws UnknownHostException {
-        List<InetAddress> adresses = new ArrayList<>();
-
+    public static List<String> getAddressesFromCidr(String cidr) {
+        List<String> ips = new ArrayList<>();
         String[] parts = cidr.split("/");
-        String ipString = parts[0];
+        String ip = parts[0];
         int prefix = Integer.parseInt(parts[1]);
 
-        InetAddress ia = InetAddress.getByName(ipString);
-        byte[] addressBytes = ia.getAddress();
+        try {
+            InetAddress address = InetAddress.getByName(ip);
+            byte[] bytes = address.getAddress();
+            int addressInt = ((bytes[0] & 0xFF) << 24) | ((bytes[1] & 0xFF) << 16) |
+                    ((bytes[2] & 0xFF) << 8) | (bytes[3] & 0xFF);
 
-        // Calcul du masque de sous-réseau
-        int mask = 0xffffffff << (32 - prefix);
-        int ipInt = 0;
-        for (byte b : addressBytes) {
-            ipInt = (ipInt << 8) | (b & 0xff);
-        }
+            int mask = 0xFFFFFFFF << (32 - prefix);
+            int startIp = addressInt & mask;
+            int endIp = startIp | ~mask;
 
-        int networkAddress = ipInt & mask;
-        int broadcastAddress = networkAddress | (~mask);
+            for (int i = startIp + 1; i < endIp; i++) {
+                ips.add(String.format("%d.%d.%d.%d",
+                        (i >> 24) & 0xFF, (i >> 16) & 0xFF,
+                        (i >> 8) & 0xFF, i & 0xFF));
+            }
+        } catch (UnknownHostException e) {}
+        return ips;
+    }
 
-        // On boucle de l'adresse réseau + 1 jusqu'à broadcast - 1
-        for (int i = networkAddress + 1; i < broadcastAddress; i++) {
-            byte[] currentIpBytes = new byte[] {
-                    (byte) ((i >> 24) & 0xff),
-                    (byte) ((i >> 16) & 0xff),
-                    (byte) ((i >> 8) & 0xff),
-                    (byte) (i & 0xff)
-            };
-            adresses.add(InetAddress.getByAddress(currentIpBytes));
-        }
-        return adresses;
+    public static String fetchMacAddr(InetAddress address){
+        return null;
     }
 }

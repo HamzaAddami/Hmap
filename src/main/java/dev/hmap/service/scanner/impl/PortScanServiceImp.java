@@ -16,11 +16,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class PortScanService implements PortScan {
+public class PortScanServiceImp implements PortScan {
 
     private final ThreadPoolManager threadPoolManager;
 
-    public PortScanService(){
+    public PortScanServiceImp(){
         this.threadPoolManager = ThreadPoolManager.getInstance();
     };
 

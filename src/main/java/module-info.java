@@ -16,7 +16,6 @@ module dev.hmap {
     requires org.hibernate.orm.core;
 
     requires jakarta.persistence;
-    requires jakarta.transaction;
 
     opens dev.hmap to javafx.fxml;
 

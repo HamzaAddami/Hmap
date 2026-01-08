@@ -3,16 +3,20 @@ package dev.hmap.dao.impl;
 
 import dev.hmap.dao.base.BaseDAO;
 import jakarta.persistence.EntityManager;
-import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+
 public abstract class AbstractDAO<T, ID> implements BaseDAO<T, ID> {
 
     protected final EntityManager em;
     private final Class<T> entityClass;
+
+    public AbstractDAO(EntityManager em, Class<T> entityClass){
+        this.em = em;
+        this.entityClass = entityClass;
+    }
 
     @Override
     public T save(T entity){

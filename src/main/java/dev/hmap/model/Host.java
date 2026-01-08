@@ -10,8 +10,6 @@ import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 
 @Entity
@@ -29,33 +27,31 @@ public class Host {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String hostName;
+    private String hostName = null;
 
     @Transient
-    private InetAddress ipAddress;
+    private InetAddress ipAddress = null;
 
-    private String ipString;
-    private String macAddress;
-
-    @Enumerated(EnumType.STRING)
-    private OsFamily osFamily;
+    private String ipString = null;
+    private String macAddress = null;
 
     @Enumerated(EnumType.STRING)
-    private HostStatus status;
-    private String description;
-    private long latency;
+    private OsFamily osFamily = OsFamily.UNKNOWN;
+
+    @Enumerated(EnumType.STRING)
+    private HostStatus status = HostStatus.DOWN;
+    private long latency = 0;
 
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Port> openPorts;
+    private List<Port> openPorts = new ArrayList<>();
 
-    private int openPortsCount;
-    private int totalPortsScanned;
+    private int openPortsCount = 0;
+    private int totalPortsScanned = 0;
 
-    private LocalDateTime scanDate;
+    private LocalDateTime scanDate = LocalDateTime.now();
 
-    private boolean reachable;
+    private boolean reachable = false;
 
-    // Constructors -------------------------
 
     public Host(InetAddress ipAddress) {
         this.ipAddress = ipAddress;

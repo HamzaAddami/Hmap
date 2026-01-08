@@ -1,10 +1,16 @@
 package dev.hmap.service.scanner.base;
 
 import dev.hmap.model.Host;
-import jakarta.transaction.Transactional;
-import org.hibernate.service.spi.ServiceException;
+
+import java.util.List;
+import java.util.Optional;
 
 
 public interface HostService {
-    Host addService(Host host) throws ServiceException;
+    Host registerHost(Host host);
+    Host updateHost(Host host);
+    Host findById(Long id);
+    List<Host> findAllHosts();
+    void delete(Host host);
+    Optional<Host> findById(String ip);
 }

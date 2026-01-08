@@ -4,16 +4,6 @@ import dev.hmap.model.Host;
 import dev.hmap.model.Port;
 import dev.hmap.enums.ScanType;
 import dev.hmap.enums.PortState;
-import org.pcap4j.core.BpfProgram;
-import org.pcap4j.core.PcapHandle;
-import org.pcap4j.core.PcapNetworkInterface;
-import org.pcap4j.core.Pcaps;
-import org.pcap4j.packet.*;
-import org.pcap4j.packet.namednumber.EtherType;
-import org.pcap4j.packet.namednumber.IpNumber;
-import org.pcap4j.packet.namednumber.IpVersion;
-import org.pcap4j.packet.namednumber.TcpPort;
-import org.pcap4j.util.MacAddress;
 
 
 import java.io.IOException;

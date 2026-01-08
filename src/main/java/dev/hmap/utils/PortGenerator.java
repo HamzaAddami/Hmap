@@ -3,7 +3,7 @@ package dev.hmap.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PortGeneator {
+public class PortGenerator {
 
     public static final List<Integer> COMMONS_UDP_PORTS = List.of
             (

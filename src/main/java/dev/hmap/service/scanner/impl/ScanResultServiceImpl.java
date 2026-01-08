@@ -1,4 +1,5 @@
 package dev.hmap.service.scanner.impl;
 
-public class PortService {
+public class ScanResultServiceImpl {
+
 }

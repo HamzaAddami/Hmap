@@ -1,6 +1,5 @@
 package dev.hmap.model;
 
-import java.util.Objects;
 import dev.hmap.enums.PortState;
 import dev.hmap.enums.Protocol;
 import jakarta.persistence.*;
