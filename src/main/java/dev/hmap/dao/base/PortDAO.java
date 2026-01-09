@@ -4,6 +4,7 @@ import dev.hmap.model.Port;
 
 import java.util.List;
 
-public interface PortDAO extends BaseDAO<Port, Long> {
+public interface
+PortDAO extends BaseDAO<Port, Long> {
     List<Port> findOpenPortsByHost(Long hostId);
 }

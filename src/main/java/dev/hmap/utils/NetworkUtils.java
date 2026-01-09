@@ -4,8 +4,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class NetworkUtils {
+
     public static List<String> getAddressesFromCidr(String cidr) {
         List<String> ips = new ArrayList<>();
         String[] parts = cidr.split("/");
@@ -31,7 +33,26 @@ public class NetworkUtils {
         return ips;
     }
 
-    public static String fetchMacAddr(InetAddress address){
-        return null;
+    public static String fetchHostname(InetAddress addr) {
+        String canonical = addr.getCanonicalHostName();
+        return (canonical.equals(addr.getHostAddress())) ? "Unknown" : canonical;
     }
+
+    public static String fetchMacAddress(InetAddress addr) {
+
+        try {
+            Process process = Runtime.getRuntime().exec("arp -a " + addr.getHostAddress());
+            try (Scanner scanner = new Scanner(process.getInputStream())) {
+                while (scanner.hasNext()) {
+                    String token = scanner.next();
+                    if (token.matches("([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})")) {
+                        return token.toUpperCase();
+                    }
+                }
+            }
+        } catch (Exception e) { return "00:00:00:00:00:00"; }
+        return "Not Found";
+    }
+
+
 }

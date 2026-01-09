@@ -9,13 +9,11 @@
 
     <padding><Insets top="40" right="50" bottom="40" left="50"/></padding>
 
-    <!-- Header Section -->
     <VBox spacing="8" styleClass="header-section">
         <Label text="HMap Network Scanner" styleClass="main-title"/>
         <Label text="Discover and monitor devices on your network in real-time" styleClass="subtitle"/>
     </VBox>
 
-    <!-- Search Bar with Action -->
     <HBox spacing="12" alignment="CENTER_LEFT" styleClass="search-bar">
         <TextField fx:id="cidrInput"
                    promptText="192.168.1.0/24"
@@ -31,7 +29,6 @@
                 styleClass="secondary-button"/>
     </HBox>
 
-    <!-- Stats Cards -->
     <HBox spacing="15" styleClass="stats-container">
         <VBox spacing="5" styleClass="stat-card" HBox.hgrow="ALWAYS">
             <Label text="TOTAL DEVICES" styleClass="stat-label"/>
@@ -50,7 +47,6 @@
         </VBox>
     </HBox>
 
-    <!-- Main Table -->
     <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
         <TableView fx:id="hostTable" styleClass="modern-table">
             <columns>
@@ -67,7 +63,6 @@
         </TableView>
     </VBox>
 
-    <!-- Footer with Progress -->
     <HBox spacing="15" alignment="CENTER" styleClass="footer-bar">
         <Label fx:id="statusLabel" text="Ready to scan" styleClass="status-text"/>
         <Region HBox.hgrow="ALWAYS"/>

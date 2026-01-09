@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface HostDAO extends BaseDAO<Host, Long>{
     Optional<Host> findByIp(String ip);
-    List<Host> findActiveHosts();
 }

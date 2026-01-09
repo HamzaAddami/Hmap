@@ -1,10 +1,9 @@
-package dev.hmap.service.scanner.impl;
+package dev.hmap.service.scanner;
 
 import dev.hmap.enums.ScanType;
 import dev.hmap.model.Host;
 import dev.hmap.model.Port;
 import dev.hmap.model.ScanResult;
-import dev.hmap.service.scanner.base.PortScan;
 import dev.hmap.service.task.PortScanTask;
 import dev.hmap.config.ThreadPoolManager;
 
@@ -16,22 +15,22 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class PortScanServiceImp implements PortScan {
+public class PortScanService  {
 
     private final ThreadPoolManager threadPoolManager;
 
-    public PortScanServiceImp(){
+    public PortScanService(){
         this.threadPoolManager = ThreadPoolManager.getInstance();
     };
 
 
-    @Override
+
     public InetAddress resolveHost(String host) throws UnknownHostException {
         return InetAddress.getByName(host);
     }
 
-    @Override
-      public Future<ScanResult> scanAsync(Host host, List<Integer> ports, ScanType scanType) {
+
+    public Future<ScanResult> scanAsync(Host host, List<Integer> ports, ScanType scanType) {
         Callable<ScanResult> overallScan = () -> {
             ScanResult scanResult = new ScanResult(host);
             List<Future<Port>> portFutures = new ArrayList<>();
@@ -57,7 +56,7 @@ public class PortScanServiceImp implements PortScan {
         return threadPoolManager.executeScanTasks(overallScan);
     }
 
-    @Override
+
     public void shutdown() {
         threadPoolManager.shutdown();
     }

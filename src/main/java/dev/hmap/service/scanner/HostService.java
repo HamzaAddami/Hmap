@@ -1,18 +1,16 @@
-package dev.hmap.service.scanner.impl;
+package dev.hmap.service.scanner;
 
 import dev.hmap.config.ScanRepository;
-import dev.hmap.config.ThreadPoolManager;
 import dev.hmap.dao.base.HostDAO;
 import dev.hmap.dao.impl.HostDAOImp;
 import dev.hmap.model.Host;
-import dev.hmap.service.scanner.base.HostService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
 import java.util.Optional;
 
-public class HostServiceImpl implements HostService {
+public class HostService {
 
     @FunctionalInterface
     private interface TransactionalAction<T>{
@@ -35,34 +33,29 @@ public class HostServiceImpl implements HostService {
         }
     }
 
-    @Override
+
     public Host registerHost(Host host) {
         return runTransaction((dao, em) -> {
             return dao.save(host);
         });
     }
 
-    @Override
     public Host updateHost(Host host) {
         return null;
     }
 
-    @Override
     public Host findById(Long id) {
         return null;
     }
 
-    @Override
     public List<Host> findAllHosts() {
         return List.of();
     }
 
-    @Override
     public void delete(Host host) {
 
     }
 
-    @Override
     public Optional<Host> findById(String ip) {
         return Optional.empty();
     }

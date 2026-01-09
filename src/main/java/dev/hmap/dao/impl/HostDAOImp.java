@@ -22,8 +22,4 @@ public class HostDAOImp extends AbstractDAO<Host, Long> implements HostDAO {
                 .findFirst();
     }
 
-    @Override
-    public List<Host> findActiveHosts() {
-        return List.of();
-    }
 }

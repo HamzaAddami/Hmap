@@ -2,14 +2,13 @@ package dev.hmap.controller;
 
 import dev.hmap.enums.HostStatus;
 import dev.hmap.model.Host;
-import dev.hmap.service.scanner.impl.HostDiscoveryServiceImpl;
-import dev.hmap.service.scanner.impl.HostServiceImpl;
+import dev.hmap.service.scanner.HostDiscoveryService;
+import dev.hmap.service.scanner.HostService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
@@ -41,8 +40,8 @@ public class MainController {
     @FXML private ProgressBar progressBar;
 
     // Services
-    private final HostDiscoveryServiceImpl discoveryService = new HostDiscoveryServiceImpl();
-    private final HostServiceImpl hostService = new HostServiceImpl();
+    private final HostDiscoveryService discoveryService = new HostDiscoveryService();
+    private final HostService hostService = new HostService();
     private final ObservableList<Host> hostList = FXCollections.observableArrayList();
 
     // State
