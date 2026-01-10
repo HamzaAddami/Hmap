@@ -41,22 +41,33 @@ public class HostService {
     }
 
     public Host updateHost(Host host) {
-        return null;
+        return runTransaction((dao, em) -> {
+            return dao.update(host);
+        });
     }
 
-    public Host findById(Long id) {
-        return null;
+    public Optional<Host> findById(Long id) {
+        return runTransaction((dao, em) -> {
+            return dao.findById(id);
+        });
     }
 
     public List<Host> findAllHosts() {
-        return List.of();
+        return runTransaction((dao, em) -> {
+            return dao.findAll();
+        } );
     }
 
     public void delete(Host host) {
-
+        runTransaction((dao, em) -> {
+            dao.delete(host);
+            return null;
+        });
     }
 
     public Optional<Host> findById(String ip) {
-        return Optional.empty();
+        return runTransaction((dao, em) -> {
+            return dao.findByIp(ip);
+        });
     }
 }

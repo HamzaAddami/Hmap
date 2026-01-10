@@ -1,0 +1,634 @@
+/* Port Scan View Styles - dev/hmap/styles/portscan.css */
+
+/* Root container */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f8fafc;
+}
+
+/* Target Header */
+.target-header {
+    -fx-padding: 0 0 15 0;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.target-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+    -fx-padding: 5 0;
+}
+
+.target-label:disabled {
+    -fx-text-fill: #94a3b8;
+    -fx-font-style: italic;
+}
+
+.hint-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+    -fx-font-style: italic;
+}
+
+/* Configuration Grid */
+.config-grid {
+    -fx-padding: 20;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.config-grid Label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+}
+
+.config-grid TextField {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+.config-grid TextField:focused {
+    -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.1), 5, 0, 0, 0);
+}
+
+.config-grid ComboBox {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6;
+    -fx-padding: 5 10;
+    -fx-font-size: 13px;
+    -fx-pref-height: 35;
+}
+
+.config-grid ComboBox .arrow-button {
+    -fx-background-color: #f1f5f9;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 0 6 6 0;
+}
+
+.config-grid ComboBox .list-cell {
+    -fx-padding: 8 12;
+    -fx-background-color: white;
+}
+
+.config-grid ComboBox .list-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* Small Buttons */
+.small-button {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #475569;
+    -fx-font-weight: 500;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10;
+    -fx-border-radius: 4;
+    -fx-cursor: hand;
+    -fx-pref-height: 30;
+}
+
+.small-button:hover {
+    -fx-background-color: #cbd5e1;
+}
+
+.small-button:disabled {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #94a3b8;
+    -fx-cursor: default;
+}
+
+/* Main Buttons */
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-padding: 10 24;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 5, 0, 0, 2);
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #2563eb, #1d4ed8);
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.4), 7, 0, 0, 3);
+}
+
+.primary-button:pressed {
+    -fx-background-color: #1d4ed8;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.2), 3, 0, 0, 1);
+}
+
+.primary-button:disabled {
+    -fx-background-color: #cbd5e1;
+    -fx-text-fill: #94a3b8;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+.danger-button {
+    -fx-background-color: linear-gradient(to bottom, #ef4444, #dc2626);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-padding: 10 24;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.3), 5, 0, 0, 2);
+}
+
+.danger-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #dc2626, #b91c1c);
+    -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.4), 7, 0, 0, 3);
+}
+
+.danger-button:pressed {
+    -fx-background-color: #b91c1c;
+    -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.2), 3, 0, 0, 1);
+}
+
+.danger-button:disabled {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #cbd5e1;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+.secondary-button {
+    -fx-background-color: white;
+    -fx-text-fill: #475569;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #94a3b8;
+}
+
+.secondary-button:pressed {
+    -fx-background-color: #f1f5f9;
+}
+
+/* Progress Bar */
+.progress-bar {
+    -fx-accent: #3b82f6;
+    -fx-background-color: #e2e8f0;
+    -fx-pref-height: 8;
+    -fx-border-radius: 4;
+}
+
+.progress-bar .track {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 4;
+}
+
+.progress-bar .bar {
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 4;
+    -fx-padding: 0.5;
+}
+
+.progress-bar:indeterminate .bar {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #60a5fa, #3b82f6);
+    -fx-background-insets: 0;
+}
+
+/* Status Label */
+.status-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+    -fx-font-weight: 500;
+    -fx-padding: 0 10;
+}
+
+.status-label.scanning {
+    -fx-text-fill: #3b82f6;
+    -fx-font-weight: 600;
+}
+
+.status-label.complete {
+    -fx-text-fill: #10b981;
+    -fx-font-weight: 600;
+}
+
+.status-label.error {
+    -fx-text-fill: #ef4444;
+    -fx-font-weight: 600;
+}
+
+/* Results Table */
+.results-table {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-padding: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.results-table .column-header {
+    -fx-background-color: #f1f5f9;
+    -fx-border-color: #e2e8f0;
+    -fx-font-weight: 600;
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+    -fx-padding: 10 8;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.results-table .column-header:hover {
+    -fx-background-color: #e2e8f0;
+}
+
+.results-table .table-row-cell {
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-table-cell-border-color: transparent;
+    -fx-background-color: white;
+    -fx-padding: 8 0;
+}
+
+.results-table .table-row-cell:odd {
+    -fx-background-color: #f8fafc;
+}
+
+.results-table .table-row-cell:hover {
+    -fx-background-color: #f0f9ff;
+    -fx-cursor: default;
+}
+
+.results-table .table-row-cell:selected {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e40af;
+}
+
+.results-table .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 8 8;
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Special styling for port numbers */
+.results-table .table-cell:first {
+    -fx-font-weight: 600;
+    -fx-text-fill: #1e293b;
+}
+
+/* Table placeholder */
+.table-placeholder {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+    -fx-padding: 40;
+    -fx-font-style: italic;
+}
+
+/* Filter/Stats Bar */
+.filter-bar {
+    -fx-padding: 10 15;
+    -fx-background-color: #f1f5f9;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6 6 0 0;
+    -fx-border-width: 1 1 0 1;
+}
+
+.stats-bar {
+    -fx-padding: 8 15;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 0 0 6 6;
+    -fx-border-width: 0 1 1 1;
+}
+
+.stats-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 500;
+}
+
+.stats-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1e293b;
+}
+
+/* Toolbar */
+.tool-bar {
+    -fx-padding: 10 0;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-color: transparent;
+}
+
+.tool-bar Button {
+    -fx-padding: 6 12;
+    -fx-font-size: 12px;
+}
+
+/* Scan Presets Panel */
+.presets-panel {
+    -fx-padding: 15;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-spacing: 10;
+}
+
+.preset-button {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+    -fx-font-weight: 500;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-pref-width: 120;
+}
+
+.preset-button:hover {
+    -fx-background-color: #e2e8f0;
+}
+
+.preset-button.selected {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+}
+
+/* Port Range Inputs */
+.port-range-container {
+    -fx-spacing: 5;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.port-range-input {
+    -fx-pref-width: 60;
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 4;
+    -fx-padding: 5 8;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER;
+}
+
+.port-range-label {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+    -fx-padding: 0 5;
+}
+
+/* Advanced Options Panel */
+.advanced-panel {
+    -fx-padding: 15;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-spacing: 10;
+}
+
+.advanced-panel .title {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #475569;
+    -fx-padding: 0 0 5 0;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Checkbox styling */
+.check-box {
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 4;
+    -fx-pref-width: 16;
+    -fx-pref-height: 16;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #3b82f6;
+}
+
+.check-box:hover .box {
+    -fx-border-color: #94a3b8;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #3b82f6;
+    -fx-border-color: #2563eb;
+}
+
+/* Slider styling */
+.slider {
+    -fx-pref-height: 30;
+}
+
+.slider .track {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 3;
+    -fx-pref-height: 6;
+}
+
+.slider .thumb {
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 8;
+    -fx-pref-height: 16;
+    -fx-pref-width: 16;
+}
+
+.slider .thumb:hover {
+    -fx-background-color: #2563eb;
+}
+
+.slider .axis {
+    -fx-tick-label-fill: #64748b;
+    -fx-font-size: 11px;
+}
+
+/* Port Status Colors */
+.port-open {
+    -fx-text-fill: #10b981 !important;
+    -fx-font-weight: 600 !important;
+}
+
+.port-closed {
+    -fx-text-fill: #ef4444 !important;
+}
+
+.port-filtered {
+    -fx-text-fill: #f59e0b !important;
+}
+
+.port-unfiltered {
+    -fx-text-fill: #3b82f6 !important;
+}
+
+/* Response Time Colors */
+.response-fast {
+    -fx-text-fill: #10b981 !important;
+    -fx-font-weight: 500 !important;
+}
+
+.response-medium {
+    -fx-text-fill: #f59e0b !important;
+}
+
+.response-slow {
+    -fx-text-fill: #ef4444 !important;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.loading-text {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* Empty State */
+.empty-state {
+    -fx-padding: 40;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+}
+
+.empty-state .icon {
+    -fx-font-size: 48px;
+    -fx-text-fill: #cbd5e1;
+}
+
+.empty-state .title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #64748b;
+}
+
+.empty-state .subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+    -fx-text-alignment: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+    .config-grid {
+        -fx-hgap: 8;
+        -fx-vgap: 8;
+        -fx-padding: 12;
+    }
+
+    .config-grid Label {
+        -fx-font-size: 12px;
+    }
+
+    .small-button {
+        -fx-font-size: 11px;
+        -fx-padding: 4 8;
+    }
+
+    .primary-button, .danger-button {
+        -fx-padding: 8 16;
+        -fx-font-size: 13px;
+    }
+}
+
+/* Animation for new scan results */
+@keyframes highlight {
+    from {
+        -fx-background-color: #dbeafe;
+    }
+    to {
+        -fx-background-color: transparent;
+    }
+}
+
+.highlight-new {
+    -fx-animation: highlight 2s ease-out;
+}
+
+/* Tooltip styling */
+.tooltip {
+    -fx-background-color: rgba(15, 23, 42, 0.95);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12;
+    -fx-border-radius: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+/* Context Menu */
+.context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.menu-item {
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+.menu-item:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.menu-item:disabled {
+    -fx-text-fill: #94a3b8;
+}
+
+/* Scrollbar styling */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10;
+}
+
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 10;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #f1f5f9;
+}

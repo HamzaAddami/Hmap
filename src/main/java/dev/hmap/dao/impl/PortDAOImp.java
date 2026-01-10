@@ -15,7 +15,7 @@ public class PortDAOImp extends AbstractDAO<Port, Long> implements PortDAO {
 
     @Override
     public List<Port> findOpenPortsByHost(Long hostId) {
-        return em.createQuery("SELECT p FROM Port p WHERE p.host.id = :hostId AND p.state = 'OPEN'", Port.class)
+        return em.createQuery("SELECT p FROM Port p WHERE p.host.id = :hostId AND (p.state = 'OPEN' OR p.state = 'OPEN_OR_FILTERED') ", Port.class)
                 .setParameter("hostId", hostId)
                 .getResultList();
     }

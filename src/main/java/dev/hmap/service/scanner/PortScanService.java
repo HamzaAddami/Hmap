@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 public class PortScanService  {
 
     private final ThreadPoolManager threadPoolManager;
+    private final ScanResultService scanResultService = new ScanResultService();
 
     public PortScanService(){
         this.threadPoolManager = ThreadPoolManager.getInstance();
@@ -51,7 +52,7 @@ public class PortScanService  {
                 }
             }
             scanResult.finalizeScan();
-            return scanResult;
+            return scanResultService.registerScanResult(scanResult);
         };
         return threadPoolManager.executeScanTasks(overallScan);
     }

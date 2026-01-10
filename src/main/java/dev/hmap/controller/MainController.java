@@ -1,312 +1,126 @@
 package dev.hmap.controller;
 
-import dev.hmap.enums.HostStatus;
-import dev.hmap.model.Host;
-import dev.hmap.service.scanner.HostDiscoveryService;
-import dev.hmap.service.scanner.HostService;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import dev.hmap.config.ThreadPoolManager;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 
+import java.io.IOException;
+
 public class MainController {
 
-    // UI Components - Search
-    @FXML private TextField cidrInput;
-    @FXML private Button scanButton;
-    @FXML private Button clearButton;
-    @FXML private Button stopScan;
+    @FXML private VBox hostDiscoveryTab;
+    @FXML private VBox portScannerTab;
+    @FXML private StackPane contentArea;
+    @FXML private Label threadStatsLabel;
 
-    // UI Components - Stats
-    @FXML private Label totalDevicesLabel;
-    @FXML private Label onlineDevicesLabel;
-    @FXML private Label scanningLabel;
-
-    // UI Components - Table
-    @FXML private TableView<Host> hostTable;
-    @FXML private TableColumn<Host, String> ipColumn;
-    @FXML private TableColumn<Host, String> hostnameColumn;
-    @FXML private TableColumn<Host, String> statusColumn;
-    @FXML private TableColumn<Host, String> osColumn;
-    @FXML private TableColumn<Host, Long> latencyColumn;
-    @FXML private TableColumn<Host, String> macAddressColumn;
-
-    // UI Components - Footer
-    @FXML private Label statusLabel;
-    @FXML private ProgressBar progressBar;
-
-    // Services
-    private final HostDiscoveryService discoveryService = new HostDiscoveryService();
-    private final HostService hostService = new HostService();
-    private final ObservableList<Host> hostList = FXCollections.observableArrayList();
-
-    // State
-    private boolean isScanning = false;
-    private int discoveredCount = 0;
+    private final ThreadPoolManager threadPoolManager = ThreadPoolManager.getInstance();
+    private HostDiscoveryController hostDiscoveryController;
+    private PortScanController portScannerController;
 
     @FXML
     public void initialize() {
-        setupTableColumns();
-        setupTableStyling();
-        setupDefaultValues();
-        hostTable.setItems(hostList);
-    }
-
-    private void setupTableColumns() {
-        // Utiliser des cellValueFactory avec callback pour s'assurer que les valeurs sont récupérées
-        ipColumn.setCellValueFactory(cellData -> {
-            String ip = cellData.getValue().getIpString();
-            return new javafx.beans.property.SimpleStringProperty(ip != null ? ip : "N/A");
-        });
-
-        hostnameColumn.setCellValueFactory(cellData -> {
-            String hostname = cellData.getValue().getHostName();
-            return new javafx.beans.property.SimpleStringProperty(hostname != null ? hostname : "Unknown");
-        });
-
-        statusColumn.setCellValueFactory(cellData -> {
-            HostStatus status = cellData.getValue().getStatus();
-            return new javafx.beans.property.SimpleStringProperty(status != null ? status.toString() : "UNKNOWN");
-        });
-
-        macAddressColumn.setCellValueFactory(cellData -> {
-            String macAddress = cellData.getValue().getMacAddress();
-            return new javafx.beans.property.SimpleStringProperty(macAddress != null ? macAddress : "UNKNOWN");
-        });
-
-        osColumn.setCellValueFactory(cellData -> {
-            var os = cellData.getValue().getOsFamily();
-            return new javafx.beans.property.SimpleStringProperty(os != null ? os.toString() : "UNKNOWN");
-        });
-
-        latencyColumn.setCellValueFactory(cellData -> {
-            long latency = cellData.getValue().getLatency();
-            return new javafx.beans.property.SimpleLongProperty(latency).asObject();
-        });
-
-        statusColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String status, boolean empty) {
-                super.updateItem(status, empty);
-                if (empty || status == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(status);
-                    if (status.equals(HostStatus.UP.toString())) {
-                        setStyle("-fx-text-fill: #10B981; -fx-font-weight: 600;");
-                    } else if (status.equals(HostStatus.DOWN.toString())) {
-                        setStyle("-fx-text-fill: #EF4444; -fx-font-weight: 600;");
-                    } else {
-                        setStyle("-fx-text-fill: #F59E0B; -fx-font-weight: 600;");
-                    }
-                }
-            }
-        });
-
-        latencyColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(Long latency, boolean empty) {
-                super.updateItem(latency, empty);
-                if (empty || latency == null || latency == 0) {
-                    setText("—");
-                    setStyle("");
-                } else {
-                    setText(latency + " ms");
-                    if (latency < 50) {
-                        setStyle("-fx-text-fill: #10B981;");
-                    } else if (latency < 150) {
-                        setStyle("-fx-text-fill: #F59E0B;");
-                    } else {
-                        setStyle("-fx-text-fill: #EF4444;");
-                    }
-                }
-            }
-        });
-
-        hostnameColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String hostname, boolean empty) {
-                super.updateItem(hostname, empty);
-                if (empty || hostname == null || hostname.isEmpty()) {
-                    setText("Unknown");
-                    setStyle("-fx-text-fill: #94A3B8; -fx-font-style: italic;");
-                } else {
-                    setText(hostname);
-                    setStyle("");
-                }
-            }
-        });
-
-    }
-
-    private void setupTableStyling() {
-        Label placeholder = new Label("No devices discovered yet.\nEnter a subnet (e.g., 192.168.1.0/24) and click 'Scan Network' to begin.");
-        placeholder.setStyle("-fx-text-fill: #94A3B8; -fx-font-size: 14px; -fx-text-alignment: center;");
-        hostTable.setPlaceholder(placeholder);
-    }
-
-    private void setupDefaultValues() {
-        totalDevicesLabel.setText("0");
-        onlineDevicesLabel.setText("0");
-        scanningLabel.setText("Ready");
-        statusLabel.setText("Ready to scan");
-        progressBar.setProgress(0);
-        progressBar.setVisible(false);
+        System.out.println("[*] MainController initialized");
+        loadHostDiscoveryView();
+        startThreadMonitoring();
     }
 
     @FXML
-    private void handleScan() {
-        if (isScanning) {
-            showAlert("Scan in Progress", "A scan is already running. Please wait for it to complete.");
-            return;
-        }
-
-        String cidr = cidrInput.getText().trim();
-        if (cidr.isEmpty()) {
-            showAlert("Invalid Input", "Please enter a valid subnet in CIDR notation (e.g., 192.168.1.0/24)");
-            return;
-        }
-
-        startScan(cidr);
+    private void handleHostDiscoveryTab() {
+        System.out.println("[*] Switching to Host Discovery view");
+        loadHostDiscoveryView();
+        updateTabStyles(hostDiscoveryTab, portScannerTab);
     }
 
-    private void startScan(String cidr) {
-        isScanning = true;
-        discoveredCount = 0;
-        hostList.clear();
+    @FXML
+    private void handlePortScannerTab() {
+        System.out.println("[*] Switching to Port Scanner view");
+        loadPortScannerView();
+        updateTabStyles(portScannerTab, hostDiscoveryTab);
+    }
 
-        // Update UI
-        updateScanningState(true);
+    private void loadHostDiscoveryView() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/dev/hmap/fxml/HostDiscoveryView.fxml"));
 
-        // Start discovery
-        new Thread(() -> {
-            try {
-                discoveryService.discoverHost(cidr, host -> {
-                    try {
-                        // S'assurer que les données de base sont définies
-                        if (host.getStatus() == null) {
-                            host.setStatus(HostStatus.UP);
-                        }
-                        if (host.getOsFamily() == null) {
-                            host.setOsFamily(dev.hmap.enums.OsFamily.UNKNOWN);
-                        }
-
-                        Host savedHost = hostService.registerHost(host);
-
-                        Platform.runLater(() -> {
-                            // Debug: vérifier les valeurs
-                            System.out.println("Adding host: IP=" + savedHost.getIpString() +
-                                    ", Hostname=" + savedHost.getHostName() +
-                                    ", Status=" + savedHost.getStatus());
-
-                            hostList.add(savedHost);
-                            discoveredCount++;
-                            updateStats();
-
-                            // Forcer le rafraîchissement du tableau
-                            hostTable.refresh();
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Platform.runLater(() -> {
-                            statusLabel.setText("Error saving host: " + host.getIpString());
-                        });
-                    }
-                });
-
-                // Scan complete
-                Platform.runLater(() -> {
-                    finalizeScan();
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> {
-                    updateScanningState(false);
-                    statusLabel.setText("Scan failed: " + e.getMessage());
-                    isScanning = false;
-                });
+            if (loader.getLocation() == null) {
+                System.err.println("[✗] HostDiscoveryView.fxml not found!");
+                System.err.println("[i] Tried path: /dev/hmap/fxml/HostDiscoveryView.fxml");
+                return;
             }
-        }).start();
-    }
 
-    private void updateScanningState(boolean scanning) {
-        if (scanning) {
-            scanButton.setDisable(true);
-            scanButton.setText("Scanning...");
-            progressBar.setVisible(true);
-            progressBar.setProgress(-1); // Indeterminate
-            scanningLabel.setText("In Progress");
-            scanningLabel.setStyle("-fx-text-fill: #6366F1;");
-            statusLabel.setText("Discovering devices on network...");
-        } else {
-            scanButton.setDisable(false);
-            scanButton.setText("Scan Network");
-            progressBar.setVisible(false);
-            scanningLabel.setText("Complete");
-            scanningLabel.setStyle("-fx-text-fill: #10B981;");
+            Parent view = loader.load();
+            hostDiscoveryController = loader.getController();
+            hostDiscoveryController.setPortScannerCallback(this::switchToPortScannerWithHost);
+            contentArea.getChildren().setAll(view);
 
-            // Reset after 3 seconds
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), e -> {
-                scanningLabel.setText("Ready");
-                scanningLabel.setStyle("-fx-text-fill: #64748B;");
-            }));
-            timeline.play();
+            System.out.println("[✓] Host Discovery view loaded successfully");
+
+        } catch (IOException e) {
+            System.err.println("[✗] Error loading HostDiscoveryView: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void updateStats() {
-        totalDevicesLabel.setText(String.valueOf(hostList.size()));
+    private void loadPortScannerView() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/dev/hmap/fxml/PortScannerView.fxml"));
 
-        long onlineCount = hostList.stream()
-                .filter(host -> host.getStatus() == HostStatus.UP)
-                .count();
-        onlineDevicesLabel.setText(String.valueOf(onlineCount));
+            if (loader.getLocation() == null) {
+                System.err.println("[✗] PortScannerView.fxml not found!");
+                System.err.println("[i] Tried path: /dev/hmap/fxml/PortScannerView.fxml");
+                return;
+            }
 
-        statusLabel.setText("Discovered: " + discoveredCount + " device(s)");
-    }
+            Parent view = loader.load();
+            portScannerController = loader.getController();
+            contentArea.getChildren().setAll(view);
 
-    private void finalizeScan() {
-        isScanning = false;
-        updateScanningState(false);
-        updateStats();
+            System.out.println("[✓] Port Scanner view loaded successfully");
 
-        if (hostList.isEmpty()) {
-            statusLabel.setText("Scan complete - No devices found");
-        } else {
-            statusLabel.setText("Scan complete - Found " + hostList.size() + " device(s)");
+        } catch (IOException e) {
+            System.err.println("[✗] Error loading PortScannerView: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    @FXML
-    private void handleClear() {
-        if (isScanning) {
-            showAlert("Cannot Clear", "Please wait for the current scan to complete.");
-            return;
+    private void switchToPortScannerWithHost(String hostIp) {
+        System.out.println("[*] Switching to Port Scanner with host: " + hostIp);
+        loadPortScannerView();
+        updateTabStyles(portScannerTab, hostDiscoveryTab);
+        if (portScannerController != null) {
+            portScannerController.setTargetHost(hostIp);
+        }
+    }
+
+    private void updateTabStyles(VBox activeTab, VBox inactiveTab) {
+        activeTab.getStyleClass().removeAll("tab-inactive");
+        if (!activeTab.getStyleClass().contains("tab-active")) {
+            activeTab.getStyleClass().add("tab-active");
         }
 
-        hostList.clear();
-        cidrInput.clear();
-        setupDefaultValues();
-        statusLabel.setText("Table cleared");
+        inactiveTab.getStyleClass().removeAll("tab-active");
+        if (!inactiveTab.getStyleClass().contains("tab-inactive")) {
+            inactiveTab.getStyleClass().add("tab-inactive");
+        }
     }
 
-    @FXML
-    private void handleStopScan(){
-        isScanning = !isScanning;
-        discoveryService.shutdown();
-    }
+    private void startThreadMonitoring() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            String stats = threadPoolManager.getSummary();
+            threadStatsLabel.setText(stats);
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
 
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        System.out.println("[✓] Thread monitoring started");
     }
 }

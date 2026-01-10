@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="view-container" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="dev.hmap.controller.PortScanController">
+
+    <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+
+    <!-- Header -->
+    <VBox spacing="8" styleClass="header-section">
+        <Label text="Port Scanner" styleClass="section-title"/>
+        <Label text="Scan ports and identify running services" styleClass="section-subtitle"/>
+    </VBox>
+
+    <!-- Configuration Panel -->
+    <VBox spacing="15" styleClass="config-panel">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="Target Host" styleClass="input-label"/>
+                <TextField fx:id="targetInput"
+                           promptText="192.168.1.1 or hostname"
+                           styleClass="modern-input"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Scan Type" styleClass="input-label"/>
+                <ComboBox fx:id="scanTypeCombo" prefWidth="150" styleClass="modern-combo"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Port Range" styleClass="input-label"/>
+                <ComboBox fx:id="portRangeCombo" prefWidth="180" styleClass="modern-combo"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="Custom Ports (e.g., 80,443,8080-8090)" styleClass="input-label"/>
+                <TextField fx:id="customPortsInput"
+                           promptText="80,443,3000-3010"
+                           styleClass="modern-input"/>
+            </VBox>
+
+            <VBox spacing="6" alignment="BOTTOM_LEFT">
+                <Region prefHeight="20"/>
+                <HBox spacing="10">
+                    <Button fx:id="scanButton"
+                            text="▶ Start Scan"
+                            onAction="#handleScan"
+                            styleClass="primary-btn"/>
+                    <Button fx:id="stopScanButton"
+                            text="⏹ Stop"
+                            onAction="#handleStopScan"
+                            styleClass="danger-btn"/>
+                    <Button fx:id="clearButton"
+                            text="✕ Clear"
+                            onAction="#handleClear"
+                            styleClass="secondary-btn"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Stats Cards -->
+    <HBox spacing="15" styleClass="stats-grid">
+        <VBox spacing="8" styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="📋" styleClass="stat-icon"/>
+                <Label text="TOTAL" styleClass="stat-label"/>
+            </HBox>
+            <Label fx:id="totalPortsLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+
+        <VBox spacing="8" styleClass="stat-card-success" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="✓" styleClass="stat-icon"/>
+                <Label text="OPEN" styleClass="stat-label"/>
+            </HBox>
+            <Label fx:id="openPortsLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+
+        <VBox spacing="8" styleClass="stat-card-danger" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="✗" styleClass="stat-icon"/>
+                <Label text="CLOSED" styleClass="stat-label"/>
+            </HBox>
+            <Label fx:id="closedPortsLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+
+        <VBox spacing="8" styleClass="stat-card-warning" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="⚠" styleClass="stat-icon"/>
+                <Label text="FILTERED" styleClass="stat-label"/>
+            </HBox>
+            <Label fx:id="filteredPortsLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+
+        <VBox spacing="8" styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label text="⏱" styleClass="stat-icon"/>
+                <Label text="STATUS" styleClass="stat-label"/>
+            </HBox>
+            <Label fx:id="scanningStatusLabel" text="Ready" styleClass="stat-status"/>
+        </VBox>
+    </HBox>
+
+    <!-- Table -->
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-wrapper">
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 10 0;">
+            <Label text="Scan Results" styleClass="table-title"/>
+        </HBox>
+
+        <TableView fx:id="portTable" styleClass="data-table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="portNumberColumn" text="PORT" prefWidth="100"/>
+                <TableColumn fx:id="stateColumn" text="STATE" prefWidth="120"/>
+                <TableColumn fx:id="serviceColumn" text="SERVICE" prefWidth="200"/>
+                <TableColumn fx:id="protocolColumn" text="PROTOCOL" prefWidth="120"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+
+    <!-- Footer -->
+    <HBox spacing="15" alignment="CENTER" styleClass="footer-container">
+        <Label fx:id="statusLabel" text="Ready to scan" styleClass="status-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="progressLabel" text="0/0 ports" styleClass="progress-label"/>
+        <ProgressBar fx:id="progressBar" prefWidth="300" progress="0.0" styleClass="scan-progress"/>
+    </HBox>
+
+</VBox>

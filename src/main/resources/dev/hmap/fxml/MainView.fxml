@@ -2,72 +2,39 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.shape.Circle?>
 
-<VBox spacing="20" styleClass="root-container" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="dev.hmap.controller.MainController">
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dev.hmap.controller.MainController"
+            styleClass="main-container">
 
-    <padding><Insets top="40" right="50" bottom="40" left="50"/></padding>
+    <!-- Top Navigation Bar -->
+    <top>
+        <VBox styleClass="nav-container">
+            <HBox spacing="0" styleClass="nav-bar">
+                <VBox fx:id="hostDiscoveryTab" spacing="8" styleClass="nav-tab, tab-active" onMouseClicked="#handleHostDiscoveryTab">
+                    <Label text="Host Discovery" styleClass="nav-tab-title"/>
+                    <Label text="Scan networks and discover devices" styleClass="nav-tab-subtitle"/>
+                </VBox>
 
-    <VBox spacing="8" styleClass="header-section">
-        <Label text="HMap Network Scanner" styleClass="main-title"/>
-        <Label text="Discover and monitor devices on your network in real-time" styleClass="subtitle"/>
-    </VBox>
+                <VBox fx:id="portScannerTab" spacing="8" styleClass="nav-tab, tab-inactive" onMouseClicked="#handlePortScannerTab">
+                    <Label text="Port Scanner" styleClass="nav-tab-title"/>
+                    <Label text="Scan ports and services" styleClass="nav-tab-subtitle"/>
+                </VBox>
+            </HBox>
 
-    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="search-bar">
-        <TextField fx:id="cidrInput"
-                   promptText="192.168.1.0/24"
-                   HBox.hgrow="ALWAYS"
-                   styleClass="search-input"/>
-        <Button fx:id="scanButton"
-                text="Scan Network"
-                onAction="#handleScan"
-                styleClass="primary-button"/>
-        <Button fx:id="clearButton"
-                text="Clear"
-                onAction="#handleClear"
-                styleClass="secondary-button"/>
-    </HBox>
-
-    <HBox spacing="15" styleClass="stats-container">
-        <VBox spacing="5" styleClass="stat-card" HBox.hgrow="ALWAYS">
-            <Label text="TOTAL DEVICES" styleClass="stat-label"/>
-            <Label fx:id="totalDevicesLabel" text="0" styleClass="stat-value"/>
-        </VBox>
-        <VBox spacing="5" styleClass="stat-card" HBox.hgrow="ALWAYS">
-            <Label text="ONLINE" styleClass="stat-label"/>
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <Circle radius="4" styleClass="status-online"/>
-                <Label fx:id="onlineDevicesLabel" text="0" styleClass="stat-value"/>
+            <!-- Thread Stats Bar -->
+            <HBox styleClass="thread-stats-bar" alignment="CENTER_LEFT">
+                <padding><Insets top="8" right="15" bottom="8" left="15"/></padding>
+                <Label text="⚙ Thread Pool Status: " styleClass="thread-stats-label"/>
+                <Label fx:id="threadStatsLabel" text="Initializing..." styleClass="thread-stats-value"/>
             </HBox>
         </VBox>
-        <VBox spacing="5" styleClass="stat-card" HBox.hgrow="ALWAYS">
-            <Label text="SCANNING" styleClass="stat-label"/>
-            <Label fx:id="scanningLabel" text="Ready" styleClass="stat-value-small"/>
-        </VBox>
-    </HBox>
+    </top>
 
-    <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-        <TableView fx:id="hostTable" styleClass="modern-table">
-            <columns>
-                <TableColumn fx:id="ipColumn" text="IP ADDRESS" prefWidth="200"/>
-                <TableColumn fx:id="macAddressColumn" text="MAC" prefWidth="250"/>
-                <TableColumn fx:id="hostnameColumn" text="HOSTNAME" prefWidth="100"/>
-                <TableColumn fx:id="statusColumn" text="STATUS" prefWidth="50"/>
-                <TableColumn fx:id="osColumn" text="OS" prefWidth="150"/>
-                <TableColumn fx:id="latencyColumn" text="LATENCY" prefWidth="50"/>
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-            </columnResizePolicy>
-        </TableView>
-    </VBox>
+    <!-- Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area"/>
+    </center>
 
-    <HBox spacing="15" alignment="CENTER" styleClass="footer-bar">
-        <Label fx:id="statusLabel" text="Ready to scan" styleClass="status-text"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <ProgressBar fx:id="progressBar" prefWidth="250" progress="0.0" styleClass="custom-progress"/>
-        <Button fx:id="stopScan" text="StopScan" styleClass="primary-button" HBox.hgrow="ALWAYS"/>
-    </HBox>
-
-</VBox>
+</BorderPane>
